@@ -9,7 +9,11 @@ class Paddle
     constructor({position})
     {
         this.position = position
-        this.velocity = 10
+        this.velocity = 
+        {
+            x: 0,
+            y: 0
+        }
         this.width = 10
         this.height = 100
     }
@@ -17,6 +21,14 @@ class Paddle
     {
         ctx.fillStyle = 'white'
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+    }
+
+    update()
+    {
+        this.draw()
+
+        if(this.position.y + this.velocity.y > 0 && this.position.y + this.height + this.velocity.y < cvs.height)
+        this.position.y += this.velocity.y 
     }
 
 }
@@ -39,8 +51,8 @@ function animate()
     requestAnimationFrame(animate)
     ctx.fillStyle = 'black'
     ctx.fillRect(0, 0, cvs.width, cvs.height)
-    paddle1.draw()
-    paddle2.draw()
+    paddle1.update()
+    paddle2.update()
 }
 
 animate()
@@ -50,9 +62,9 @@ addEventListener('keydown', ({key}) =>
 switch (key)
 {
     case 'w':
-        paddle2.velocity.y = -1
+        paddle2.velocity.y = -10
         break
     case 's':
-        paddle2.velocity.y = 1
+        paddle2.velocity.y = 10
         break
 }})
