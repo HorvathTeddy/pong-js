@@ -38,13 +38,18 @@ class Ball
 {
     constructor({position})
     {
+        const dir = 
+        {
+            x: Math.floor(Math.random() - 0.5 >= 0 ? -3 : 3),
+            y: Math.floor(Math.random() - 0.5 >= 0 ? -3 : 3)
+        }
         this.position = position
         this.width = 15
         this.height = 15
         this.velocity = 
         {
-            x: 0,
-            y: 0
+            x: dir.x,
+            y: dir.y
         }
     }
     draw()
@@ -54,8 +59,10 @@ class Ball
     }
     update()
     {
-        
         this.draw()
+        this.position.x += this.velocity.x
+        this.position.y += this.velocity.y
+
     }
 }
 const paddle1 = new Paddle({
@@ -88,6 +95,7 @@ function animate()
     paddle1.update()
     paddle2.update()
     ball.update()
+    //if (paddle2.position.x <= ball.position.x) ball.velocity.x = 0
 }
 
 animate()
