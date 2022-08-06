@@ -68,3 +68,15 @@ switch (key)
         paddle2.velocity.y = 10
         break
 }})
+
+addEventListener('keyup', ({key}) => 
+{
+switch (key)
+{
+    case 'w':
+        paddle2.velocity.y = 0
+        break
+    case 's':
+        paddle2.velocity.y = 0
+        break
+}})
