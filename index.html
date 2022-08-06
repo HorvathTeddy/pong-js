@@ -21,6 +21,9 @@
         const cvs = document.querySelector('canvas')
         const ctx = cvs.getContext('2d')
 
+        cvs.width = innerWidth
+        cvs.height = innerHeight
+
         class Paddle
         {
             constructor({position})
@@ -31,12 +34,33 @@
                     x: 0,
                     y: 0
                 }
+                this.width = 10
+                this.height = 100
+            }
+            draw()
+            {
+                ctx.fillStyle = 'white'
+                ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
             }
         }
 
-        ctx.fillStyle = 'white'
-        ctx.fillRect(0, 0, 100, 100)
+    const paddle1 = new Paddle({
+        position:
+        {
+            x: 10,
+            y: 100
+        }})
 
+    const paddle2 = new Paddle({
+        position:
+        {
+            x: cvs.width - 35,
+            y: 100
+        }})
+
+    paddle1.draw()
+    paddle2.draw()
+     
     </script>
 </body>
 </html>
