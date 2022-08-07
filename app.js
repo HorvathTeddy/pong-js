@@ -60,18 +60,27 @@ class Ball
     update()
     {
         this.draw()
-        // right paddle
+        // paddle 2 and ball collision
         if (
-            this.position.x + this.velocity.x + this.width >= paddle2.position.x && 
-            this.position.y + this.velocity.y + this.width >= paddle2.position.y ||
-            this.position.x <= paddle1.position.x &&
-            this.position.y <= paddle1.position.y
-        )
+                this.position.x + this.width + this.velocity.x >= paddle2.position.x &&
+                this.position.y + this.height >= paddle2.position.y &&
+                this.position.y <= paddle2.position.y + paddle2.height
+           )
         {
             this.velocity.x = -this.velocity.x
         }
 
-        if (this.position.y + this.width + this.velocity.y >= cvs.width || this.position.y <= 0) 
+        // paddle 1 and ball collision
+        if (this.position.x + this.velocity.x <= paddle1.position.x + paddle1.width &&
+            this.position.y + this.height >= paddle1.position.y && 
+            this.position.y <= paddle1.position.y + paddle1.height)
+        {
+            this.velocity.x = -this.velocity.x
+        }
+
+        // wall and ball collision
+        if (this.position.y + this.width + this.velocity.y >= cvs.height ||
+            this.position.y + this.width + this.velocity.y <= 0) 
         {
             this.velocity.y = -this.velocity.y
         }
