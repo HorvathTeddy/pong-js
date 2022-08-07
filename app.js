@@ -40,8 +40,8 @@ class Ball
     {
         const dir = 
         {
-            x: Math.floor(Math.random() - 0.5 >= 0 ? -3 : 3),
-            y: Math.floor(Math.random() - 0.5 >= 0 ? -3 : 3)
+            x: Math.floor(Math.random() - 0.5 >= 0 ? -5 : 5),
+            y: Math.floor(Math.random() - 0.5 >= 0 ? -5 : 5)
         }
         this.position = position
         this.width = 15
@@ -60,13 +60,18 @@ class Ball
     update()
     {
         this.draw()
-
-        if (this.position.x + this.width + this.velocity.x >= cvs.width || this.position.x <= 0)
+        // right paddle
+        if (
+            this.position.x + this.velocity.x + this.width >= paddle2.position.x && 
+            this.position.y + this.velocity.y + this.width >= paddle2.position.y ||
+            this.position.x <= paddle1.position.x &&
+            this.position.y <= paddle1.position.y
+        )
         {
             this.velocity.x = -this.velocity.x
         }
 
-        if (this.position.y + this.width + this.velocity.y >= cvs.width || this.position.y <= 0)
+        if (this.position.y + this.width + this.velocity.y >= cvs.width || this.position.y <= 0) 
         {
             this.velocity.y = -this.velocity.y
         }
@@ -121,6 +126,12 @@ switch (key)
     case 's':
         paddle2.velocity.y = 10
         break
+    case 'ArrowUp':
+        paddle1.velocity.y = -10
+        break
+    case 'ArrowDown':
+        paddle1.velocity.y = 10
+        break
 }})
 
 addEventListener('keyup', ({key}) => 
@@ -132,5 +143,11 @@ switch (key)
         break
     case 's':
         paddle2.velocity.y = 0
+        break
+    case 'ArrowUp':
+        paddle1.velocity.y = 0
+        break
+    case 'ArrowDown':
+        paddle1.velocity.y = 0
         break
 }})
