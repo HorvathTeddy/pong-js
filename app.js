@@ -37,6 +37,7 @@ document.addEventListener('keyup', (e) => {
 gameLoop()
 
 function reset() {
+    new Audio('collision.wav').play()
     clearInterval(ID)
     Vx = -1
     Vy = -1
@@ -55,17 +56,19 @@ function gameLoop() {
                 return
             }
             if ((marginLeft(ball) + 20) > 1088) {
-                document.querySelector('#user__score').innerHTML = Number(document.querySelector('user__score').innerHTML) + 1
+                document.querySelector('#user__score').innerHTML = Number(document.querySelector('#user__score').innerHTML) + 1
                 reset()
                 return
             }
             if (marginTop(ball) < 0 || (marginTop(ball) + 20) > 544) {
+                new Audio('collision.wav').play()
                 Vy = -Vy
             }
 
             let paddle = (marginLeft(ball) + 10 < 544) ? userPaddle : computerPaddle
 
             if (collisionDetected(paddle)){
+                new Audio('collision.wav').play()
                 let angle
                 let type = (marginLeft(paddle) == 30) ? 'user' : 'comp'
                 if (ball.centerY < paddle.centerY) {
@@ -80,7 +83,7 @@ function gameLoop() {
                 Vy = V * Math.sin(angle)
             }
 
-            let compLevel = 0.05
+            let compLevel = 0.1
             computerPaddle.style.marginTop = `${marginTop(computerPaddle) + ((ball.centerY - (marginTop(computerPaddle) + 36))) * compLevel}px`
 
             ball.style.marginLeft = `${marginLeft(ball) + Vx}px`
