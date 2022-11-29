@@ -1,0 +1,56 @@
+body {
+    background: lightgrey;
+}
+
+#container {
+    background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 544px;
+    width: 1088px;
+}
+
+#user__score, #computer__score {
+    color: white;
+    position: absolute;
+    top: 12px;
+    font-style: 40px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#user__score {
+    left: 262px;
+}
+
+#computer__score {
+    left: 806px;
+}
+
+img {
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    height: 544px;
+    width: 277px;
+}
+
+#user__paddle, #computer__paddle {
+    position: absolute;
+    background: white;
+    height: 72px;
+    width: 10px;
+}
+
+#ball {
+    background-color: red;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    position: absolute;
+}
+

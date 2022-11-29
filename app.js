@@ -1,162 +1,120 @@
-const cvs = document.querySelector('canvas')
-const ctx = cvs.getContext('2d')
+let userPaddle = document.querySelector('#user__paddle')
+let computerPaddle = document.querySelector('#computer__paddle')
+let ball = document.querySelector('#ball')
 
-cvs.width = innerWidth
-cvs.height = innerHeight
+userPaddle.style.marginLeft = '30px'
+userPaddle.style.marginTop = '0px'
+computerPaddle.style.marginLeft = '1048px'
+computerPaddle.style.marginTop = '0px'
+ball.style.marginLeft = '534px'
+ball.style.marginTop = '262px'
 
+let W_Pressed = false
+let S_Pressed = false
 
-class Paddle
-{
-    constructor({position})
-    {
-        this.position = position
-        this.velocity = 
-        {
-            x: 0,
-            y: 0
-        }
-        this.width = 10
-        this.height = 100
+let ID
+
+let Vx = -1
+let Vy = -1
+let V = Math.sqrt(Math.sqrt(Math.pow(Vx,2)+Math.pow(Vy,2)))
+
+document.addEventListener('keydown', (e) => {
+    if (e.keyCode == '87') {
+        W_Pressed = true
+    } else if (e.keyCode == '83') {
+        S_Pressed = true
     }
-    draw()
-    {
-        ctx.fillStyle = 'white'
-        ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+})
+
+document.addEventListener('keyup', (e) => {
+    if (e.keyCode == '87') {
+        W_Pressed = false
+    } else if (e.keyCode == '83'){
+        S_Pressed = false
     }
+})
 
-    update()
-    {
-        this.draw()
+gameLoop()
 
-        if(this.position.y + this.velocity.y > 0 && this.position.y + this.height + this.velocity.y < cvs.height)
-        this.position.y += this.velocity.y 
-    }
-
+function reset() {
+    clearInterval(ID)
+    Vx = -1
+    Vy = -1
+    V = Math.sqrt(Math.sqrt(Math.pow(Vx,2)+Math.pow(Vy,2)))
+    ball.style.marginLeft = '534px'
+    ball.style.marginTop = '262px'
+    gameLoop()
 }
 
-class Ball
-{
-    constructor({position})
-    {
-        const dir = 
-        {
-            x: Math.floor(Math.random() - 0.5 >= 0 ? -5 : 5),
-            y: Math.floor(Math.random() - 0.5 >= 0 ? -5 : 5)
-        }
-        this.position = position
-        this.width = 15
-        this.height = 15
-        this.velocity = 
-        {
-            x: dir.x,
-            y: dir.y
-        }
-    }
-    draw()
-    {
-        ctx.fillStyle = 'red'
-        ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
-    }
-    update()
-    {
-        this.draw()
-        // paddle 2 and ball collision
-        if (
-                this.position.x + this.width + this.velocity.x >= paddle2.position.x &&
-                this.position.y + this.height >= paddle2.position.y &&
-                this.position.y <= paddle2.position.y + paddle2.height
-           )
-        {
-            this.velocity.x = -this.velocity.x
-        }
+function gameLoop() {
+    setTimeout(() => {
+        ID = setInterval(() => {
+            if (marginLeft(ball) < 0) {
+                document.querySelector('#computer__score').innerHTML = Number(document.querySelector('#computer__score').innerHTML) + 1 
+                reset()
+                return
+            }
+            if ((marginLeft(ball) + 20) > 1088) {
+                document.querySelector('#user__score').innerHTML = Number(document.querySelector('user__score').innerHTML) + 1
+                reset()
+                return
+            }
+            if (marginTop(ball) < 0 || (marginTop(ball) + 20) > 544) {
+                Vy = -Vy
+            }
 
-        // paddle 1 and ball collision
-        if (this.position.x + this.velocity.x <= paddle1.position.x + paddle1.width &&
-            this.position.y + this.height >= paddle1.position.y && 
-            this.position.y <= paddle1.position.y + paddle1.height)
-        {
-            this.velocity.x = -this.velocity.x
-        }
+            let paddle = (marginLeft(ball) + 10 < 544) ? userPaddle : computerPaddle
 
-        // wall and ball collision
-        if (this.position.y + this.width + this.velocity.y >= cvs.height ||
-            this.position.y + this.width + this.velocity.y <= 0) 
-        {
-            this.velocity.y = -this.velocity.y
-        }
+            if (collisionDetected(paddle)){
+                let angle
+                let type = (marginLeft(paddle) == 30) ? 'user' : 'comp'
+                if (ball.centerY < paddle.centerY) {
+                    angle = (type == 'user' ? -Math.PI/4 : (-3*Math.PI)/4)
+                } else if (ball.centerY > paddle.centerY) {
+                    angle = (type == 'user' ? Math.PI/4 : (3*Math.PI)/4)
+                } else if (ball.centerY == paddle.centerY) {
+                    angle = (type == 'user' ? 0 : Math.PI)
+                }
+                V += 0.5
+                Vx = V * Math.cos(angle)
+                Vy = V * Math.sin(angle)
+            }
 
-        this.position.x += this.velocity.x
-        this.position.y += this.velocity.y
-
-    }
-}
-const paddle1 = new Paddle({
-position:
-{
-    x: 10,
-    y: cvs.height/2
-}})
-
-const paddle2 = new Paddle({
-position:
-{
-    x: cvs.width - 35,
-    y: cvs.height/2
-}})
-
-const ball = new Ball({position:
-{
-    x: cvs.width/2,
-    y: cvs.height/2
-}})
-
-
-
-function animate()
-{
-    ctx.fillStyle = 'black'
-    requestAnimationFrame(animate)
-    ctx.fillRect(0, 0, cvs.width, cvs.height)
-    paddle1.update()
-    paddle2.update()
-    ball.update()
-    //if (paddle2.position.x <= ball.position.x) ball.velocity.x = 0
+            ball.style.marginLeft = `${marginLeft(ball) + Vx}px`
+            ball.style.marginTop = `${marginTop(ball) + Vy}px`
+            
+            if (W_Pressed) {
+                userPaddle.style.marginTop = `${marginTop(userPaddle) - 2}px`
+            } else if (S_Pressed && marginTop(userPaddle) < 472){
+                userPaddle.style.marginTop = `${marginTop(userPaddle) + 2}px`
+            }
+        }, 5)
+    }, 500)
 }
 
-animate()
+function collisionDetected(paddle) {
+    ball.top = marginTop(ball)
+    ball.bottom = marginTop(ball) + 20
+    ball.left = marginLeft(ball)
+    ball.right = marginLeft(ball) + 20
+    ball.centerX = marginLeft(ball) + 10
+    ball.centerY = marginTop(ball) + 10
 
-addEventListener('keydown', ({key}) => 
-{
-switch (key)
-{
-    case 'w':
-        paddle2.velocity.y = -10
-        break
-    case 's':
-        paddle2.velocity.y = 10
-        break
-    case 'ArrowUp':
-        paddle1.velocity.y = -10
-        break
-    case 'ArrowDown':
-        paddle1.velocity.y = 10
-        break
-}})
+    paddle.top = marginTop(paddle)
+    paddle.bottom = marginTop(paddle) + 72
+    paddle.left = marginLeft(paddle)
+    paddle.right = marginLeft(paddle) + 10
+    paddle.centerX = marginLeft(paddle) + 5
+    paddle.centerY = marginTop(paddle) + 36
 
-addEventListener('keyup', ({key}) => 
-{
-switch (key)
-{
-    case 'w':
-        paddle2.velocity.y = 0
-        break
-    case 's':
-        paddle2.velocity.y = 0
-        break
-    case 'ArrowUp':
-        paddle1.velocity.y = 0
-        break
-    case 'ArrowDown':
-        paddle1.velocity.y = 0
-        break
-}})
+    return ball.left < paddle.right && ball.top < paddle.bottom && ball.right > paddle.left && ball.bottom > paddle.top
+}
+
+function marginTop(elem) {
+    return Number(elem.style.marginTop.split('p')[0])
+}
+
+function marginLeft(elem) {
+    return Number(elem.style.marginLeft.split('p')[0])
+}
+

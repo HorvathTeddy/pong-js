@@ -4,18 +4,21 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pong in JS</title>
-    <style>
-        body
-        {
-            background: black;
-            margin: 0;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css"/>
+    <title>Pong</title>
 </head>
 <body>
-    <canvas></canvas>
-
+    <div id='container'>
+        <div id="user__score">
+            0
+        </div>
+        <div id="computer__score">
+            0
+        </div>
+        <img src="https://www.citypng.com/public/uploads/preview/png-white-vertical-line-31631830623zrii3qevl7.png" alt="divider">
+        <div id="user__paddle"></div>
+        <div id="computer__paddle"></div>
+        <div id="ball"></div>
     <script src="app.js"></script>
 </body>
 </html>
