@@ -80,6 +80,9 @@ function gameLoop() {
                 Vy = V * Math.sin(angle)
             }
 
+            let compLevel = 0.05
+            computerPaddle.style.marginTop = `${marginTop(computerPaddle) + ((ball.centerY - (marginTop(computerPaddle) + 36))) * compLevel}px`
+
             ball.style.marginLeft = `${marginLeft(ball) + Vx}px`
             ball.style.marginTop = `${marginTop(ball) + Vy}px`
             
@@ -107,7 +110,16 @@ function collisionDetected(paddle) {
     paddle.centerX = marginLeft(paddle) + 5
     paddle.centerY = marginTop(paddle) + 36
 
-    return ball.left < paddle.right && ball.top < paddle.bottom && ball.right > paddle.left && ball.bottom > paddle.top
+    let type = (marginLeft(paddle) == 30) ? 'user' : 'comp'
+    let boolean = false
+
+    if (type == 'user' && Vx < 0) { 
+        boolean = true
+    } else if (type == 'comp' && Vx > 0) {
+        boolean = true
+    }
+
+    return ball.left < paddle.right && ball.top < paddle.bottom && ball.right > paddle.left && ball.bottom > paddle.top && boolean
 }
 
 function marginTop(elem) {
